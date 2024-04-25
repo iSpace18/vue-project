@@ -36,7 +36,7 @@ export default {
 
 <style>
 .todo-list {
-  max-width: 600px;
+  max-width: 2600px;
 text-align:center;
 margin:0 auto;
 
