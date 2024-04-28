@@ -1,12 +1,14 @@
-vue
 <template>
   <div class="todo-list">
     <h1>To-Do List</h1>
     <input v-model="newTask" @keyup.enter="addTask" placeholder="Add a new task">
     <ul>
       <li v-for="(task, index) in tasks" :key="index" class="task-item">
-        {{ task }}
+        <span v-if="index !== editedIndex">{{ task }}</span>
+        <input v-else v-model="editedTask" @keyup.enter="saveTask" @keyup.esc="cancelEdit">
+        <button @click="editTask(index)">Edit</button>
         <button @click="removeTask(index)">Remove</button>
+        <button @click="pinTask(index)" :class="{ 'pinned': index === pinnedIndex }">Pin</button>
       </li>
     </ul>
   </div>
@@ -17,7 +19,10 @@ export default {
   data() {
     return {
       newTask: '',
-      tasks: []
+      tasks: [],
+      editedIndex: -1,
+      editedTask: '',
+      pinnedIndex: -1
     };
   },
   methods: {
@@ -29,6 +34,26 @@ export default {
     },
     removeTask(index) {
       this.tasks.splice(index, 1);
+    },
+    editTask(index) {
+      this.editedIndex = index;
+      this.editedTask = this.tasks[index];
+    },
+    saveTask() {
+      if (this.editedTask.trim() !== '') {
+        this.tasks[this.editedIndex] = this.editedTask;
+        this.editedIndex = -1;
+        this.editedTask = '';
+      }
+    },
+    cancelEdit() {
+      this.editedIndex = -1;
+      this.editedTask = '';
+    },
+    pinTask(index) {
+      this.pinnedIndex = index;
+      const pinnedTask = this.tasks.splice(index, 1);
+      this.tasks.unshift(pinnedTask[0]);
     }
   }
 };
@@ -37,14 +62,13 @@ export default {
 <style>
 .todo-list {
   max-width: 2600px;
-text-align:center;
-margin:0 auto;
-
+  text-align: center;
+  margin: 0 auto;
   padding: 20px;
+  
   border: 1px solid #ccc;
   border-radius: 15px;
 }
-
 .task-item {
   margin-top: 10px;
   padding: 10px;
@@ -55,27 +79,26 @@ margin:0 auto;
   justify-content: space-between;
   align-items: center;
 }
-
 .task-item button {
   background-color: #ff6347;
   color: white;
   border: none;
   padding: 5px 10px;
   border-radius: 3px;
-    transition:0.5s ease;
+  transition: 0.5s ease;
   cursor: pointer;
 }
-
+.task-item button.pinned {
+  background-color: #32CD32; /* Green color for pinned tasks */
+}
 .task-item button:hover {
   background-color: red;
-  transition:0.5s ease;
+  transition: 0.5s ease;
 }
-
 ul {
   list-style-type: none;
   padding: 0;
 }
-
 input {
   width: 100%;
   padding: 5px;
@@ -83,15 +106,17 @@ input {
   border: 1px solid #ccc;
   border-radius: 3px;
 }
-
 h1 {
   text-align: center;
   margin-bottom: 10px;
   color: #333;
 }
-li{
-  color:black;
-  font-weight:bold;
-  font-size:15px;
+li {
+  color: black;
+  font-weight: bold;
+  font-size: 15px;
+}
+button {
+  margin-left: 10px;
 }
 </style>
