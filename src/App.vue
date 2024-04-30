@@ -1,4 +1,4 @@
-<!-- <script setup>
+<script setup>
 import TodoList from './components/TodoList.vue'
 // import shoes_cart from './components/shoes_cart.vue'
 
@@ -17,8 +17,8 @@ export default {
     TodoList
   }
 };
-</script> -->
-<template>
+</script>
+<!-- <template>
   <div id="app">
     <ShoeCard :shoe="shoeData" />
   </div>
@@ -46,4 +46,4 @@ export default {
 
 <style>
 
-</style>
+</style> -->

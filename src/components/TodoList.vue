@@ -3,12 +3,12 @@
     <h1>To-Do List</h1>
     <input v-model="newTask" @keyup.enter="addTask" placeholder="Add a new task">
     <ul>
-      <li v-for="(task, index) in tasks" :key="index" class="task-item">
-        <span v-if="index !== editedIndex">{{ task }}</span>
+      <li v-for="task in tasks" :key="task.id" class="task-item">
+        <span v-if="task.id !== editedId">{{ task.text }}</span>
         <input v-else v-model="editedTask" @keyup.enter="saveTask" @keyup.esc="cancelEdit">
-        <button @click="editTask(index)">Edit</button>
-        <button @click="removeTask(index)">Remove</button>
-        <button @click="pinTask(index)" :class="{ 'pinned': index === pinnedIndex }">Pin</button>
+        <button @click="editTask(task.id)">Edit</button>
+        <button @click="removeTask(task.id)">Remove</button>
+        <button @click="pinTask(task.id)" :class="{ 'pinned': task.id === pinnedId }">Pin</button>
       </li>
     </ul>
   </div>
@@ -20,38 +20,48 @@ export default {
     return {
       newTask: '',
       tasks: [],
-      editedIndex: -1,
+      editedId: -1,
       editedTask: '',
-      pinnedIndex: -1
+      pinnedId: -1,
+      id: 0,
     };
   },
   methods: {
     addTask() {
       if (this.newTask.trim() !== '') {
-        this.tasks.push(this.newTask);
+        this.tasks.push({text:this.newTask, id:this.id});
         this.newTask = '';
+        this.id++        
       }
     },
-    removeTask(index) {
-      this.tasks.splice(index, 1);
+    removeTask(id) {
+      const index = this.tasks.findIndex(el=>el.id==id)
+      this.tasks.splice(index, 1)
     },
-    editTask(index) {
-      this.editedIndex = index;
-      this.editedTask = this.tasks[index];
+    editTask(id) {
+      const editedIndex = this.tasks.findIndex(el=>el.id==id)
+      this.editedId = id
+      this.editedTask = this.tasks[editedIndex].text
     },
     saveTask() {
       if (this.editedTask.trim() !== '') {
-        this.tasks[this.editedIndex] = this.editedTask;
-        this.editedIndex = -1;
+        const editedIndex = this.tasks.findIndex(el=>el.id==this.editedId)
+        this.tasks[editedIndex].text = this.editedTask;
+        this.editedId = -1;
         this.editedTask = '';
       }
     },
     cancelEdit() {
-      this.editedIndex = -1;
+      this.editedId = -1;
       this.editedTask = '';
     },
-    pinTask(index) {
-      this.pinnedIndex = index;
+    pinTask(id) {
+      if (this.pinnedId == id) {
+        this.pinnedId = -1
+        return
+      }
+      this.pinnedId = id;
+      const index = this.tasks.findIndex(el=>el.id==id)
       const pinnedTask = this.tasks.splice(index, 1);
       this.tasks.unshift(pinnedTask[0]);
     }
