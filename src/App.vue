@@ -1,49 +1,26 @@
-<script setup>
-import TodoList from './components/TodoList.vue'
-// import shoes_cart from './components/shoes_cart.vue'
-
-</script>
 <template>
   <div id="app">
-    <TodoList />
+    <h1>График пользовательских оценок</h1>
+    <RatingChart />
   </div>
 </template>
 
 <script>
-import TodoList from './components/TodoList.vue';
+// Импортируем компонент
+import RatingChart from './components/RatingChart.vue';
 
 export default {
+  name: 'App',
   components: {
-    TodoList
-  }
-};
-</script>
-<!-- <template>
-  <div id="app">
-    <ShoeCard :shoe="shoeData" />
-  </div>
-</template>
-
-<script>
-import ShoeCard from './components/shoes_cart.vue';
-
-export default {
-  components: {
-    ShoeCard
+    RatingChart,
   },
-  data() {
-    return {
-      shoeData: {
-        brand: 'Nike',
-        model: 'Air Max',
-        price: 150,
-        colors: ['#FF6347', '#4682B4', '#32CD32'] 
-      }
-    };
-  }
 };
 </script>
 
 <style>
-
-</style> -->
+#app {
+  font-family: Avenir, Helvetica, Arial, sans-serif;
+  text-align: center;
+  margin-top: 50px;
+}
+</style>
